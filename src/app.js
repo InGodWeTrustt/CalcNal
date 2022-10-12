@@ -19,6 +19,10 @@ const util = {
         elem.style.display = 'none'
     },
 
+    show(elem) {
+        elem.style.display = 'block'
+    },
+
     formSelfEmp() {
         const percents = {
             'individual': 0.04,
@@ -57,7 +61,7 @@ const util = {
     }
 }
 
-const { formAusnCB: fn2, hidden, formSelfEmp: fn3 } = util
+const { formAusnCB: fn2, hidden, show, formSelfEmp: fn3 } = util
 
 const navigationLinks = document.querySelectorAll('.navigation__link')
 const calcElems = document.querySelectorAll('.calc')
@@ -101,3 +105,23 @@ const selfEmp = document.querySelector('.self-employment'),
 hidden(calcComp) // Скрываем
 
 formSelfEmp.addEventListener('input', fn3)
+
+// ОСНО
+const osno = document.querySelector('.osno'),
+    formOsno = osno.querySelector('.calc_form'),
+    radio = osno.querySelectorAll('.calc__radio'),
+    ieBlock = osno.querySelectorAll('.result__block_ie'),
+    oooBlock = osno.querySelector('.result__block_ooo')
+
+
+const clear = (...arr) =>{
+    arr.forEach( elem => elem instanceof NodeList ? elem.forEach(e => show(e)) : show(elem))
+}
+
+radio.forEach(rad => {
+    rad.addEventListener('change', () => {
+        clear(ieBlock, oooBlock)
+        rad.nextElementSibling.textContent === 'ИП' ? hidden(oooBlock) : ieBlock.forEach(ie => hidden(ie))
+    })
+})
+
