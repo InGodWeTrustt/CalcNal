@@ -122,6 +122,6 @@ radio.forEach(rad => {
     rad.addEventListener('change', () => {
         clear(ieBlock, oooBlock)
         rad.nextElementSibling.textContent === 'ИП' ? hidden(oooBlock) : ieBlock.forEach(ie => hidden(ie))
-    })
+    }) 
 })
 
