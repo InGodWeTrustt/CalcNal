@@ -225,7 +225,7 @@ formOsno.addEventListener('input', () => {
     const taxReturn = document.querySelector('.tax-return')
     const formTaxReturn = taxReturn.querySelector('.calc__form')
 
-    const resultTaxPaid = taxReturn.querySelector('.result__tax_paid')
+    const resultNdflPaid = taxReturn.querySelector('.result__ndfl_paid')
     const resultTaxDesired = taxReturn.querySelector('.result__tax_desired')
     const resultTaxReturn = taxReturn.querySelector('.result__tax_return')
 
@@ -233,10 +233,12 @@ formOsno.addEventListener('input', () => {
         const income = formTaxReturn.income.value
         const expenses = formTaxReturn.expenses.value
 
-        
+        const ndflPaid = income * 0.13
+        const taxDesired = expenses * 0.13
+        const taxReturn = taxDesired
 
-        resultTaxPaid.textContent = formatCurrency()
-        resultTaxDesired.textContent = formatCurrency()
-        resultTaxReturn.textContent = formatCurrency()
+        resultNdflPaid.textContent = formatCurrency(ndflPaid)
+        resultTaxDesired.textContent = formatCurrency(taxDesired)
+        resultTaxReturn.textContent = formatCurrency(taxReturn)
     })
 }
