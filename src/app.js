@@ -108,20 +108,135 @@ formSelfEmp.addEventListener('input', fn3)
 
 // ОСНО
 const osno = document.querySelector('.osno'),
-    formOsno = osno.querySelector('.calc_form'),
+    formOsno = osno.querySelector('.calc__form'),
     radio = osno.querySelectorAll('.calc__radio'),
     ieBlock = osno.querySelectorAll('.result__block_ie'),
-    oooBlock = osno.querySelector('.result__block_ooo')
+    oooBlock = osno.querySelector('.result__block_ooo'),
+    resulTaxNds = osno.querySelector('.result__tax_nds'),
+    resultTaxProperty = osno.querySelector('.result__tax_tax_property'),
+    resultTaxNdflExpenses = osno.querySelector('.result__tax_ndfl-expenses'),
+    resultTaxNdflIncome = osno.querySelector('.result__tax_ndfl-income'),
+    resultTaxProfit = osno.querySelector('.result__tax_profit')
 
 
-const clear = (...arr) =>{
-    arr.forEach( elem => elem instanceof NodeList ? elem.forEach(e => show(e)) : show(elem))
+const showElements = (...arr) => {
+    arr.forEach(elem => elem instanceof NodeList ? elem.forEach(e => show(e)) : show(elem))
 }
 
 radio.forEach(rad => {
     rad.addEventListener('change', () => {
-        clear(ieBlock, oooBlock)
+        showElements(ieBlock, oooBlock)
         rad.nextElementSibling.textContent === 'ИП' ? hidden(oooBlock) : ieBlock.forEach(ie => hidden(ie))
-    }) 
+    })
 })
 
+
+formOsno.addEventListener('input', () => {
+    const income = formOsno.income.value,
+        expenses = formOsno.expenses.value,
+        property = formOsno.property.value
+
+    const nds = income * 0.2,
+        taxProperty = property * 0.02,
+        profit = income - expenses,
+        ndfExpensesTotal = profit * 0.13,
+        ndflIncomeTotal = (income - nds) * 0.13,
+        taxProfit = profit * 0.2
+
+    resulTaxNds.textContent = formatCurrency(nds)
+    resultTaxProperty.textContent = formatCurrency(taxProperty)
+    resultTaxNdflExpenses.textContent = formatCurrency(ndfExpensesTotal)
+    resultTaxNdflIncome.textContent = formatCurrency(ndflIncomeTotal)
+    resultTaxProfit.textContent = formatCurrency(taxProfit)
+
+})
+
+// УСН
+{
+    const LIMIT = 300_000
+    const usn = document.querySelector('.usn')
+    const formUsn = usn.querySelector('.calc__form')
+
+    const calcLabelExpenses = usn.querySelector('.calc__label_expenses')
+    const calcLabelProperty = usn.querySelector('.calc__label_property')
+    const resultBlockProperty = usn.querySelector('.result__block_property')
+
+    const resultTaxTotal = usn.querySelector('.result__tax_total')
+    const resultTaxProperty = usn.querySelector('.result__tax_property')
+
+    const typeTax = {
+        'income': () => {
+            calcLabelExpenses.style.display = 'none'
+            calcLabelProperty.style.display = 'none'
+            resultBlockProperty.style.display = 'none'
+
+            formUsn.expenses.value = ''
+            formUsn.property.value = ''
+        },
+        'ie-expenses': () => {
+            calcLabelExpenses.style.display = ''
+            calcLabelProperty.style.display = 'none'
+            resultBlockProperty.style.display = 'none'
+
+            formUsn.property.value = ''
+        },
+        'ooo-expenses': () => {
+            calcLabelExpenses.style.display = ''
+            calcLabelProperty.style.display = ''
+            resultBlockProperty.style.display = ''
+        }
+    }
+
+    typeTax[formUsn.typeTax.value]()
+
+    const percent = {
+        'income': 0.06,
+        "ie-expenses": 0.15,
+        "ooo-expenses": 0.15
+    }
+
+    formUsn.addEventListener('input', () => {
+        typeTax[formUsn.typeTax.value]()
+        const income = formUsn.income.value
+        const expenses = formUsn.expenses.value
+        const contributions = formUsn.contributions.value
+        const property = formUsn.property.value
+
+        let profit = income - contributions
+
+        if (formUsn.typeTax.value !== 'income') {
+            profit -= expenses
+        }
+
+        const taxBigIncome = income > LIMIT ? (profit - LIMIT) * 0.01 : 0
+        const summ = profit - (taxBigIncome < 0 ? 0 : taxBigIncome)
+        const tax = summ * percent[formUsn.typeTax.value]
+        const taxProp = property * 0.02
+
+        resultTaxTotal.textContent = formatCurrency(tax < 0 ? 0 : tax)
+        resultTaxProperty.textContent = formatCurrency(taxProp)
+    })
+}
+
+
+// Налоговый вычет 13%
+
+{
+    const taxReturn = document.querySelector('.tax-return')
+    const formTaxReturn = taxReturn.querySelector('.calc__form')
+
+    const resultTaxPaid = taxReturn.querySelector('.result__tax_paid')
+    const resultTaxDesired = taxReturn.querySelector('.result__tax_desired')
+    const resultTaxReturn = taxReturn.querySelector('.result__tax_return')
+
+    formTaxReturn.addEventListener('input', () => {
+        const income = formTaxReturn.income.value
+        const expenses = formTaxReturn.expenses.value
+
+        
+
+        resultTaxPaid.textContent = formatCurrency()
+        resultTaxDesired.textContent = formatCurrency()
+        resultTaxReturn.textContent = formatCurrency()
+    })
+}

@@ -113,12 +113,12 @@
             <form class="calc__form">
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Расходы</span>
-                <input class="calc__input" type="number" name="a">
+                <input class="calc__input" type="number" name="expenses">
               </label>
 
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Оффициальный доход за год (с оплатой НДФЛ)</span>
-                <input class="calc__input" type="number" name="b">
+                <input class="calc__input" type="number" name="income">
               </label>
             </form>
           </div>
@@ -128,17 +128,17 @@
 
             <div class="result__block">
               <p class="result__caption">НДФЛ уплаченый</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_paid">0</p>
             </div>
 
             <div class="result__block">
               <p class="result__caption">Желаемый налоговый вычет</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_desired">0</p>
             </div>
 
             <div class="result__block">
               <p class="result__caption">Налоговый вычет</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_return">0</p>
             </div>
           </div>
         </div>
@@ -148,6 +148,7 @@
         </div>
       </section>
 
+      <!-- УСН-->
       <section class="calc usn" data-tax="usn">
         <h2 class="calc__title">УСН</h2>
 
@@ -159,39 +160,39 @@
 
               <div class="calc__radio-wrapper">
                 <label class="calc__label calc__label_radio">
-                  <input class="calc__radio" type="radio" name="type">
+                  <input class="calc__radio" type="radio" name="typeTax" value="income"  checked>
                   <span class="calc__text">Доходы</span>
                 </label>
 
                 <label class="calc__label calc__label_radio">
-                  <input class="calc__radio" type="radio" name="type">
+                  <input class="calc__radio" type="radio" name="typeTax" value="ie-expenses">
                   <span class="calc__text">ИП, Доходы минус расходы</span>
                 </label>
 
                 <label class="calc__label calc__label_radio">
-                  <input class="calc__radio" type="radio" name="type">
+                  <input class="calc__radio" type="radio" name="typeTax" value="ooo-expenses">
                   <span class="calc__text">ООО, Доходы минус расходы</span>
                 </label>
               </div>
 
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Доходы</span>
-                <input class="calc__input" type="number" name="a">
+                <input class="calc__input" type="number" name="income">
               </label>
 
-              <label class="calc__label calc__label_input">
+              <label class="calc__label calc__label_expenses calc__label_input">
                 <span class="calc__text">Расходы</span>
-                <input class="calc__input" type="number" name="b">
+                <input class="calc__input" type="number" name="expenses">
               </label>
 
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Сумма взносов за себя и сотрудников</span>
-                <input class="calc__input" type="number" name="с">
+                <input class="calc__input" type="number" name="contributions">
               </label>
 
-              <label class="calc__label calc__label_input">
+              <label class="calc__label calc__label_property calc__label_input">
                 <span class="calc__text">Имущество</span>
-                <input class="calc__input" type="number" name="d">
+                <input class="calc__input" type="number" name="property">
               </label>
             </form>
           </div>
@@ -201,12 +202,12 @@
 
             <div class="result__block">
               <p class="result__caption">Налог</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_total">0</p>
             </div>
 
-            <div class="result__block">
+            <div class="result__block result__block_property">
               <p class="result__caption">Налог на имущество 2%</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_property">0</p>
             </div>
           </div>
         </div>
@@ -216,6 +217,7 @@
         </div>
       </section>
 
+      <!--ОСНО-->
       <section class="calc osno" data-tax="osno">
         <h2 class="calc__title">ОСН / ОСНО</h2>
 
@@ -239,17 +241,17 @@
 
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Доходы</span>
-                <input class="calc__input" type="number" name="a">
+                <input class="calc__input" type="number" name="income">
               </label>
 
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Расходы</span>
-                <input class="calc__input" type="number" name="b">
+                <input class="calc__input" type="number" name="expenses">
               </label>
 
               <label class="calc__label calc__label_input">
                 <span class="calc__text">Имущество</span>
-                <input class="calc__input" type="number" name="c">
+                <input class="calc__input" type="number" name="property">
               </label>
             </form>
           </div>
@@ -259,27 +261,27 @@
 
             <div class="result__block">
               <p class="result__caption">НДС</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_nds">0</p>
             </div>
 
             <div class="result__block">
               <p class="result__caption">Налог на имущество</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_tax_property">0</p>
             </div>
 
             <div class="result__block result__block_ie">
               <p class="result__caption">НДФЛ(Вычет в виде расходов)</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_ndfl-expenses">0</p>
             </div>
 
             <div class="result__block result__block_ie">
               <p class="result__caption">НДФЛ(Вычет 20% от доходов)</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_ndfl-income">0</p>
             </div>
 
             <div class="result__block result__block_ooo">
               <p class="result__caption">Налог на прибыль 20%</p>
-              <p class="result__tax">0</p>
+              <p class="result__tax result__tax_profit">0</p>
             </div>
           </div>
         </div>
