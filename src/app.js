@@ -230,12 +230,12 @@ formOsno.addEventListener('input', () => {
     const resultTaxReturn = taxReturn.querySelector('.result__tax_return')
 
     formTaxReturn.addEventListener('input', () => {
-        const income = formTaxReturn.income.value
-        const expenses = formTaxReturn.expenses.value
+        const income = +formTaxReturn.income.value
+        const expenses = +formTaxReturn.expenses.value
 
         const ndflPaid = income * 0.13
-        const taxDesired = expenses * 0.13
-        const taxReturn = taxDesired
+        const taxDesired = expenses < 120_000 ? expenses * 0.13 : 120_000 * 0.13
+        const taxReturn = taxDesired < ndflPaid ? taxDesired : ndflPaid
 
         resultNdflPaid.textContent = formatCurrency(ndflPaid)
         resultTaxDesired.textContent = formatCurrency(taxDesired)
