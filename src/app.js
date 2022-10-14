@@ -2,6 +2,24 @@ import './style/normalize.css'
 import './style/style.css'
 import { formatCurrency } from './tools/tools'
 
+const debounceCallTimer = (fn, delay = 500) => {
+    let lastCall = 0
+    let lastCallTimer;
+
+    return (...param) => {
+        const prev = lastCall
+        lastCall = Date.now()
+        if (prev && ((lastCall - prev) <= delay)) {
+            clearTimeout(lastCallTimer)
+        }
+
+        lastCallTimer = setTimeout(() => {
+            fn(...param)
+        }, delay)
+    }
+}
+
+
 const util = {
     formAusnCB() {
         if (formAusn.type.value === 'income') {
@@ -82,29 +100,31 @@ for (let i = 0; i < navigationLinks.length; i++) {
 }
 
 // АУСН
-const ausn = document.querySelector('.ausn'),
-    formAusn = ausn.querySelector('.calc__form'),
-    resultTaxTotal = ausn.querySelector('.result__tax_total'),
-    calcLabelExpenses = ausn.querySelector('.calc__label_expenses')
+{
+    const ausn = document.querySelector('.ausn'),
+        formAusn = ausn.querySelector('.calc__form'),
+        resultTaxTotal = ausn.querySelector('.result__tax_total'),
+        calcLabelExpenses = ausn.querySelector('.calc__label_expenses')
 
-// Скрываем блок с расходами
-hidden(calcLabelExpenses)
+    // Скрываем блок с расходами
+    hidden(calcLabelExpenses)
 
-formAusn.addEventListener('input', fn2)
+    formAusn.addEventListener('input', fn2)
 
-// Самозанятые
-const selfEmp = document.querySelector('.self-employment'),
-    formSelfEmp = selfEmp.querySelector('.calc__form'),
-    resTaxSelfEmp = selfEmp.querySelector('.result__tax_total'),
-    calcComp = selfEmp.querySelector('.calc__label_compensation'),
-    resBlockComp = selfEmp.querySelectorAll('.result__block_compensation'),
-    resultTaxCompensation = selfEmp.querySelector('.result__tax_compensation'),
-    resultTaxRestCompensation = selfEmp.querySelector('.result__tax_rest-compensation'),
-    resultTaxResult = selfEmp.querySelector('.result__tax_result')
+    // Самозанятые
+    const selfEmp = document.querySelector('.self-employment'),
+        formSelfEmp = selfEmp.querySelector('.calc__form'),
+        resTaxSelfEmp = selfEmp.querySelector('.result__tax_total'),
+        calcComp = selfEmp.querySelector('.calc__label_compensation'),
+        resBlockComp = selfEmp.querySelectorAll('.result__block_compensation'),
+        resultTaxCompensation = selfEmp.querySelector('.result__tax_compensation'),
+        resultTaxRestCompensation = selfEmp.querySelector('.result__tax_rest-compensation'),
+        resultTaxResult = selfEmp.querySelector('.result__tax_result')
 
-hidden(calcComp) // Скрываем
+    hidden(calcComp) // Скрываем
 
-formSelfEmp.addEventListener('input', fn3)
+    formSelfEmp.addEventListener('input', debounceCallTimer(fn3))
+}
 
 // ОСНО
 const osno = document.querySelector('.osno'),
@@ -131,7 +151,7 @@ radio.forEach(rad => {
 })
 
 
-formOsno.addEventListener('input', () => {
+formOsno.addEventListener('input', debounceCallTimer(() => {
     const income = formOsno.income.value,
         expenses = formOsno.expenses.value,
         property = formOsno.property.value
@@ -149,7 +169,7 @@ formOsno.addEventListener('input', () => {
     resultTaxNdflIncome.textContent = formatCurrency(ndflIncomeTotal)
     resultTaxProfit.textContent = formatCurrency(taxProfit)
 
-})
+}))
 
 // УСН
 {
@@ -195,7 +215,7 @@ formOsno.addEventListener('input', () => {
         "ooo-expenses": 0.15
     }
 
-    formUsn.addEventListener('input', () => {
+    formUsn.addEventListener('input', debounceCallTimer(() => {
         typeTax[formUsn.typeTax.value]()
         const income = formUsn.income.value
         const expenses = formUsn.expenses.value
@@ -215,7 +235,7 @@ formOsno.addEventListener('input', () => {
 
         resultTaxTotal.textContent = formatCurrency(tax < 0 ? 0 : tax)
         resultTaxProperty.textContent = formatCurrency(taxProp)
-    })
+    }))
 }
 
 
@@ -229,16 +249,22 @@ formOsno.addEventListener('input', () => {
     const resultTaxDesired = taxReturn.querySelector('.result__tax_desired')
     const resultTaxReturn = taxReturn.querySelector('.result__tax_return')
 
+
+    let timer
     formTaxReturn.addEventListener('input', () => {
-        const income = +formTaxReturn.income.value
-        const expenses = +formTaxReturn.expenses.value
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+            const income = +formTaxReturn.income.value
+            const expenses = +formTaxReturn.expenses.value
+            const sumExp = +formTaxReturn.sumExpenses.value
 
-        const ndflPaid = income * 0.13
-        const taxDesired = expenses < 120_000 ? expenses * 0.13 : 120_000 * 0.13
-        const taxReturn = taxDesired < ndflPaid ? taxDesired : ndflPaid
+            const ndflPaid = income * 0.13
+            const taxDesired = sumExp < 120_000 ? sumExp * 0.13 : 120_000 * 0.13
+            const taxReturn = taxDesired < ndflPaid ? taxDesired : ndflPaid
 
-        resultNdflPaid.textContent = formatCurrency(ndflPaid)
-        resultTaxDesired.textContent = formatCurrency(taxDesired)
-        resultTaxReturn.textContent = formatCurrency(taxReturn)
+            resultNdflPaid.textContent = formatCurrency(ndflPaid)
+            resultTaxDesired.textContent = formatCurrency(taxDesired)
+            resultTaxReturn.textContent = formatCurrency(taxReturn)
+        }, 1000);
     })
 }
